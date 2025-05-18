@@ -16,6 +16,7 @@ public class NPCTalkScript : MonoBehaviour
     public GameObject objWithGameScript;
     public GameObject questArrow;
     public GameObject wayfindingArrow;
+    public GameObject compassBarImage;
 
     private bool playerIsWithinTalkRange = false;
 
@@ -62,6 +63,7 @@ public class NPCTalkScript : MonoBehaviour
                 questUIDocument.GetComponent<QuestUIScript>().OnShowQuest(questNPCCanGive);
                 print("STARTING QUEST");
                 wayfindingArrow.GetComponent<ArrowWayfindingScript>().UpdateTrackingQuestTarget();
+                compassBarImage.GetComponent<CompassBarImageScript>().AddCompassMarkers();
 
             }
 
@@ -95,7 +97,6 @@ public class NPCTalkScript : MonoBehaviour
                         print("QUEST COMPLETED");
                         objWithGameScript.GetComponent<GameScript>().CompleteQuest(quest.questId);
                         wayfindingArrow.GetComponent<ArrowWayfindingScript>().CompleteTracking();
-
                     }
                 }
             }
