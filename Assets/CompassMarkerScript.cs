@@ -6,6 +6,7 @@ public class CompassMarkerScript : MonoBehaviour
     //public Camera camera;
 
     public GameObject associatedTargetObj;
+    public int associatedTargetObjId;
 
     private int xUpperBound = 200;
     private int xLowerBound = -200;
@@ -28,8 +29,9 @@ public class CompassMarkerScript : MonoBehaviour
 
     }
 
-    public void setAssociatedTargetId(GameObject newTarget)
+    public void setAssociatedTargetId(GameObject newTarget, int newTargetId)
     {
         associatedTargetObj = newTarget;
+        associatedTargetObjId = newTargetId;
     }
 }

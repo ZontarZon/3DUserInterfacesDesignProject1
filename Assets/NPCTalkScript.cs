@@ -64,7 +64,6 @@ public class NPCTalkScript : MonoBehaviour
                 print("STARTING QUEST");
                 wayfindingArrow.GetComponent<ArrowWayfindingScript>().UpdateTrackingQuestTarget();
                 compassBarImage.GetComponent<CompassBarImageScript>().AddCompassMarkers();
-
             }
 
             foreach (Quest quest in activeQuests)
@@ -88,6 +87,9 @@ public class NPCTalkScript : MonoBehaviour
                             print("QUEST STEP COMPLETED");
                             wayfindingArrow.GetComponent<ArrowWayfindingScript>().UpdateTrackingQuestTarget();
                             questArrow.SetActive(false);
+                            compassBarImage.GetComponent<CompassBarImageScript>().ClearCompassMarkerForTarget(NPCId);
+
+                            
                         }
                     }
 
@@ -97,6 +99,8 @@ public class NPCTalkScript : MonoBehaviour
                         print("QUEST COMPLETED");
                         objWithGameScript.GetComponent<GameScript>().CompleteQuest(quest.questId);
                         wayfindingArrow.GetComponent<ArrowWayfindingScript>().CompleteTracking();
+                        // there shouldn't be any left, but...
+                        //compassBarImage.GetComponent<CompassBarImageScript>().ClearCompassMarkers();
                     }
                 }
             }

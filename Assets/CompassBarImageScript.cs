@@ -28,6 +28,23 @@ public class CompassBarImageScript : MonoBehaviour
     public void ClearCompassMarkers()
     {
         NPCsToTrack.Clear();
+        for (int i = transform.childCount - 1; i >= 0; i--)
+        {
+            Destroy(transform.GetChild(i).gameObject);
+        }
+    }
+
+    public void ClearCompassMarkerForTarget(int targetId) 
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            int targetObjId = transform.GetChild(i).GetComponent<CompassMarkerScript>().associatedTargetObjId;
+            if (targetObjId == targetId)
+            {
+                Destroy(transform.GetChild(i).gameObject);
+                return;
+            }
+        }
     }
 
     public void AddCompassMarkers()
@@ -35,15 +52,15 @@ public class CompassBarImageScript : MonoBehaviour
         print("ADDING COMPASS MARKERS");
         List<Quest> activeQuests = objWithGameScript.GetComponent<GameScript>().currentQuests;
 
-            GameObject[] NPCsList = GameObject.FindGameObjectsWithTag("NPC");
+        GameObject[] NPCsList = GameObject.FindGameObjectsWithTag("NPC");
 
-            foreach (Quest quest in activeQuests)
-            {
+        foreach (Quest quest in activeQuests)
+        {
             foreach (QuestStep questStep in quest.questSteps)
             {
                 foreach (GameObject npc in NPCsList)
                 {
-                                int NPCId = npc.GetComponent<NPCScript>().NPCId;
+                    int NPCId = npc.GetComponent<NPCScript>().NPCId;
 
                     if (!questStep.isCompleted && NPCId == questStep.targetId)
                     {
@@ -52,19 +69,19 @@ public class CompassBarImageScript : MonoBehaviour
                         GameObject newCompassMarkerContainer = new GameObject("CompassMarkerContainer"); //Create the GameObject
                         TextMeshProUGUI textObj = newCompassMarkerContainer.AddComponent<TextMeshProUGUI>();
                         textObj.text = "V";
-                        
+
                         textObj.color = Color.black;
                         textObj.fontSize = 30;
                         newCompassMarkerContainer.transform.SetParent(transform);
                         textObj.tag = "CompassMarker";
                         newCompassMarkerContainer.AddComponent<CompassMarkerScript>();
-                        newCompassMarkerContainer.GetComponent<CompassMarkerScript>().setAssociatedTargetId(npc);
+                        newCompassMarkerContainer.GetComponent<CompassMarkerScript>().setAssociatedTargetId(npc, NPCId);
 
                         RectTransform rectTransform = newCompassMarkerContainer.GetComponent<RectTransform>();
-                        rectTransform.localScale = new Vector3(1,1,1);
+                        rectTransform.localScale = new Vector3(1, 1, 1);
                         rectTransform.sizeDelta = new Vector2(20, 20);
 
-                       	rectTransform.anchoredPosition.Set(0, 0);
+                        rectTransform.anchoredPosition.Set(0, 0);
                         rectTransform.anchorMin.Set(0, 1);
                         rectTransform.anchorMax.Set(0, 1);
                         rectTransform.pivot.Set(0, 0);
