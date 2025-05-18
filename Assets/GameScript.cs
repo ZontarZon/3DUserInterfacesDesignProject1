@@ -9,10 +9,7 @@ public class GameScript : MonoBehaviour
     public void CompleteQuest(int questId)
     {
         print("REMOVING QUEST");
-        //Quest questToRemove = currentQuests.Where<Quest>(questI)
-        // currentQuests.Remove(questId);
         currentQuests = currentQuests.Where(quest => quest.questId != questId).ToList();
-
     }
 
 }

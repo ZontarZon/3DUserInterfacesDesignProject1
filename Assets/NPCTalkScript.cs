@@ -15,6 +15,7 @@ public class NPCTalkScript : MonoBehaviour
     public GameObject npc;
     public GameObject objWithGameScript;
     public GameObject questArrow;
+    public GameObject wayfindingArrow;
 
     private bool playerIsWithinTalkRange = false;
 
@@ -23,7 +24,6 @@ public class NPCTalkScript : MonoBehaviour
         cone.GetComponent<MeshRenderer>().enabled = true;
         canvasWithName.GetComponent<Canvas>().enabled = true;
         playerIsWithinTalkRange = true;
-
     }
 
     void OnTriggerExit()
@@ -37,12 +37,9 @@ public class NPCTalkScript : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.E) && playerIsWithinTalkRange)
         {
-            print("PLAYER TALK ACTION");
-
-                        // the arrow is active, so check if it needs to be turned off.
+            // the arrow is active, so check if it needs to be turned off.
             List<Quest> activeQuests = objWithGameScript.GetComponent<GameScript>().currentQuests;
             int NPCId = npc.GetComponent<NPCScript>().NPCId;
-            //bool isPartOfActiveQuest = npc.GetComponent<NPCScript>().isPartOfActiveQuest;
 
             foreach (Quest quest in activeQuests)
             {
@@ -62,13 +59,12 @@ public class NPCTalkScript : MonoBehaviour
             if (questNPCCanGive != null)
             {
                 // There is a quest to give, so make it active and show the UI.
-                print("quest is not null");
-                print(questNPCCanGive.title);
-
                 questUIDocument.GetComponent<QuestUIScript>().OnShowQuest(questNPCCanGive);
+                print("STARTING QUEST");
+                wayfindingArrow.GetComponent<ArrowWayfindingScript>().UpdateTrackingQuestTarget();
+
             }
 
-            //List<Quest> activeQuests = objWithGameScript.GetComponent<GameScript>().currentQuests;
             foreach (Quest quest in activeQuests)
             {
                 int numOfCompletedSteps = 0;
@@ -88,18 +84,18 @@ public class NPCTalkScript : MonoBehaviour
                             questStep.isCompleted = true;
                             numOfCompletedSteps++;
                             print("QUEST STEP COMPLETED");
+                            wayfindingArrow.GetComponent<ArrowWayfindingScript>().UpdateTrackingQuestTarget();
                             questArrow.SetActive(false);
-                            //return;
                         }
                     }
 
-                    print(numOfCompletedSteps);
                     if (numOfCompletedSteps == quest.questSteps.Count)
                     {
                         // This quest is completed. Pop it from the activeQuests.
                         print("QUEST COMPLETED");
                         objWithGameScript.GetComponent<GameScript>().CompleteQuest(quest.questId);
-                        //activeQuests.Remove(quest);
+                        wayfindingArrow.GetComponent<ArrowWayfindingScript>().CompleteTracking();
+
                     }
                 }
             }
