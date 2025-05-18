@@ -1,5 +1,7 @@
 using System.Numerics;
 using UnityEngine;
+using UnityEngine.AI;
+
 
 public class CharacterMoveScript : MonoBehaviour
 {
@@ -19,28 +21,39 @@ public class CharacterMoveScript : MonoBehaviour
     [SerializeField] float stepHeight = 0.6f;
     [SerializeField] float stepSmooth = 0.1f;
 
+    public NavMeshAgent agent;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        StepUpperRaycaster.transform.position = new  UnityEngine.Vector3(StepUpperRaycaster.transform.position.x, stepHeight, StepUpperRaycaster.transform.position.z);
-        
+        StepUpperRaycaster.transform.position = new UnityEngine.Vector3(StepUpperRaycaster.transform.position.x, stepHeight, StepUpperRaycaster.transform.position.z);
+
     }
 
     // Update is called once per frame
     void Update()
     {
         // horizontal rotation
-        transform.Rotate( UnityEngine.Vector3.up * Input.GetAxis("Mouse X") * 10f);
+        transform.Rotate(UnityEngine.Vector3.up * Input.GetAxis("Mouse X") * 10f);
 
-        
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                agent.SetDestination(hit.point);
+            }
+        }
     }
 
     void FixedUpdate()
     {
-        UnityEngine.Vector3 newVelocity =  UnityEngine.Vector3.up * rb.linearVelocity.y;
+        UnityEngine.Vector3 newVelocity = UnityEngine.Vector3.up * rb.linearVelocity.y;
         float speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
         newVelocity.x = Input.GetAxis("Horizontal") * speed;
         newVelocity.z = Input.GetAxis("Vertical") * speed;
@@ -48,9 +61,10 @@ public class CharacterMoveScript : MonoBehaviour
         handleStepClimb();
     }
 
-    void LateUpdate() {
+    void LateUpdate()
+    {
         // vertical rotation
-         UnityEngine.Vector3 e = head.eulerAngles;
+        UnityEngine.Vector3 e = head.eulerAngles;
         e.x -= Input.GetAxis("Mouse Y") * 10f;
         e.x = RestrictHeadAngle(e.x, -85, 85);
         head.eulerAngles = e;

@@ -8,8 +8,8 @@ public class CompassMarkerScript : MonoBehaviour
     public GameObject associatedTargetObj;
     public int associatedTargetObjId;
 
-    private int xUpperBound = 200;
-    private int xLowerBound = -200;
+   // private int xUpperBound = 200;
+   //private int xLowerBound = -200;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
